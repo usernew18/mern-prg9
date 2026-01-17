@@ -2,58 +2,46 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
-// API URL
 const API_URL = "http://localhost:5000/employees";
 
 function App() {
 
-  // State to store employees
   const [employees, setEmployees] = useState([]);
 
-  // State to manage add/edit form
   const [currentEmployee, setCurrentEmployee] = useState(null);
 
-  // Fetch employees on page load
   useEffect(() => {
     fetchEmployees();
   }, []);
 
-  // READ operation
   const fetchEmployees = async () => {
     const response = await axios.get(API_URL);
     setEmployees(response.data);
   };
 
-  // CREATE & UPDATE operation
   const handleSave = async (employee) => {
     if (employee.id) {
-      // Update employee
       await axios.put(`${API_URL}/${employee.id}`, employee);
     } else {
-      // Create employee
       await axios.post(API_URL, employee);
     }
     fetchEmployees();
     setCurrentEmployee(null);
   };
 
-  // DELETE operation
   const handleDelete = async (id) => {
     await axios.delete(`${API_URL}/${id}`);
     fetchEmployees();
   };
 
-  // Show add form
   const handleAdd = () => {
     setCurrentEmployee({ firstName: '', lastName: '', email: '' });
   };
 
-  // Show edit form
   const handleEdit = (employee) => {
     setCurrentEmployee(employee);
   };
 
-  // Show form if adding/editing
   if (currentEmployee) {
     return (
       <EmployeeForm
@@ -64,7 +52,6 @@ function App() {
     );
   }
 
-  // Employee List UI
   return (
     <div className="container">
       <h2>Employees List</h2>
@@ -98,7 +85,6 @@ function App() {
   );
 }
 
-// Employee Form Component
 const EmployeeForm = ({ employee, onSave, onCancel }) => {
 
   const [formData, setFormData] = useState({ ...employee });
